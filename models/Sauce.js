@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+
 const sauceSchema = mongoose.Schema({
   userId : { type: String, required: true},
   name : { type: String, required: true},
@@ -12,4 +13,5 @@ const sauceSchema = mongoose.Schema({
   usersLiked : { type: Array, required: true},
   usersDisliked : { type: Array, required: true}
 })
+
 module.exports = mongoose.model('Sauce', sauceSchema)

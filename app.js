@@ -12,10 +12,11 @@ const userRoutes = require('./routes/user')
 const sauceRoutes = require('./routes/sauce')
 
 // connection to the database
-mongoose.connect('mongodb+srv://jokdeve:Jokarts91@form.vftzx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
-  { useCreateIndex: true,
+mongoose.connect('mongodb+srv://jokdeve:Jokarts91@form.vftzx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', {
+    useCreateIndex: true,
     useNewUrlParser: true,
-    useUnifiedTopology: true })
+    useUnifiedTopology: true
+  })
   .then(() => console.log('Successful database connection !'))
   .catch(() => console.log('Failed database connection !'))
 
@@ -32,7 +33,7 @@ app.use((req, res, next) => {
 
 // define the routes with his router
 app.use('/images', express.static(path.join(__dirname, 'images')))
-app.use('/api/sauces',sauceRoutes)
-app.use('/api/auth',userRoutes)
+app.use('/api/sauces', sauceRoutes)
+app.use('/api/auth', userRoutes)
 
 module.exports = app

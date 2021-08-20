@@ -1,5 +1,7 @@
 const Sauce = require('../models/Sauce')
-const { authControl } = require('./authControl')
+const {
+    authControl
+} = require('./authControl')
 const fs = require('fs')
 
 exports.createSauce = (req, res, next) => {
@@ -13,38 +15,49 @@ exports.createSauce = (req, res, next) => {
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     })
     sauce.save()
-        .then(() => res.status(201).json({ message: 'The new sauce was created !' }))
-        .catch(error => res.status(400).json({ error }))
+        .then(() => res.status(201).json({
+            message: 'The new sauce was created !'
+        }))
+        .catch(error => res.status(400).json({
+            error
+        }))
 }
 
 exports.modifySauce = (req, res, next) => {
-    // remove old image
-    if(req.file){
-        Sauce.findOne({ _id: req.url.substr(1)})
-        .then(sauce => {
-            const indexUrl = sauce.imageUrl.indexOf('/images/')+8
-            const imgName = sauce.imageUrl.substr(indexUrl)
-            fs.unlink(`images/${imgName}`,(err => {
-                err ? console.log(err):console.log("Old image is removed")
-            }))
-        })
-        .catch(error => res.status(400).json({ error }))
-    }
     const sauceObject = req.file ? {
         ...JSON.parse(req.body.sauce),
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-    } : { ...req.body }
+    } : {
+        ...req.body
+    }
     if (authControl(sauceObject.userId, res.locals.currentUserId)) {
+        if (req.file) {
+            Sauce.findOne({
+                    _id: req.params.id
+                })
+                .then(sauce => {
+                    fs.unlink(`images/${sauce.imageUrl.substr(sauce.imageUrl.indexOf('/images/')+8)}`, err => err ? console.log(err) : console.log("Old image is removed"))
+                })
+                .catch(error => res.status(400).json({
+                    error
+                }))
+        }
         Sauce.updateOne({
                 _id: req.params.id
             }, {
                 ...sauceObject,
                 _id: req.params.id
             })
-            .then(() => res.status(200).json({ message: 'The sauce has been modified !' }))
-            .catch(error => res.status(400).json({ error }))
+            .then(() => res.status(200).json({
+                message: 'The sauce has been modified !'
+            }))
+            .catch(error => res.status(400).json({
+                error
+            }))
     } else {
-        res.status(403).json({ message: ' unauthorized request' })
+        res.status(403).json({
+            message: ' unauthorized request'
+        })
     }
 }
 
@@ -59,14 +72,22 @@ exports.deleteSauce = (req, res, next) => {
                     Sauce.deleteOne({
                             _id: req.params.id
                         })
-                        .then(() => res.status(200).json({ message: 'The sauce has been removed !' }))
-                        .catch(error => res.status(400).json({ error }))
+                        .then(() => res.status(200).json({
+                            message: 'The sauce has been removed !'
+                        }))
+                        .catch(error => res.status(400).json({
+                            error
+                        }))
                 })
             } else {
-                res.status(403).json({ message: ' unauthorized request' })
+                res.status(403).json({
+                    message: ' unauthorized request'
+                })
             }
         })
-        .catch(error => res.status(500).json({ error }))
+        .catch(error => res.status(500).json({
+            error
+        }))
 }
 
 exports.getOneSauce = (req, res, next) => {
@@ -82,7 +103,9 @@ exports.getOneSauce = (req, res, next) => {
 exports.getAllSauce = (req, res, next) => {
     Sauce.find()
         .then(sauces => res.status(200).json(sauces))
-        .catch(error => res.status(400).json({ error }))
+        .catch(error => res.status(400).json({
+            error
+        }))
 }
 
 exports.likeSauce = (req, res, next) => {
@@ -138,8 +161,14 @@ exports.likeSauce = (req, res, next) => {
                     usersDisliked: sauce.usersDisliked,
                     _id: req.params.id
                 })
-                .then(() => res.status(200).json({ message: swtMessage }))
-                .catch(error => res.status(400).json({ error }))
+                .then(() => res.status(200).json({
+                    message: swtMessage
+                }))
+                .catch(error => res.status(400).json({
+                    error
+                }))
         })
-        .catch(error => res.status(404).json({ error }))
+        .catch(error => res.status(404).json({
+            error
+        }))
 }
