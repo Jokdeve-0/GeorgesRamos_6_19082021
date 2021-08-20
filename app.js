@@ -13,7 +13,8 @@ const sauceRoutes = require('./routes/sauce')
 
 // connection to the database
 mongoose.connect('mongodb+srv://jokdeve:Jokarts91@form.vftzx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
-  { useNewUrlParser: true,
+  { useCreateIndex: true,
+    useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Successful database connection !'))
   .catch(() => console.log('Failed database connection !'))
